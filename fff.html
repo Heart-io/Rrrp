@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Language Code Editor</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e1e;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background-color: #272727;
+            color: #61dafb;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .tabs {
+            display: flex;
+            background-color: #333;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            color: #61dafb;
+            background-color: #333;
+            border-bottom: 2px solid transparent;
+            font-size: 16px;
+        }
+
+        .tab.active {
+            background-color: #272727;
+            border-bottom: 2px solid #61dafb;
+        }
+
+        .tab-content {
+            display: none;
+            flex: 1;
+            height: calc(100% - 60px);
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        .editor-container {
+            display: flex;
+            height: 100%;
+        }
+
+        .editor {
+            flex: 1;
+            background-color: #272727;
+            padding: 20px;
+            color: #fff;
+            border: none;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            outline: none;
+            overflow-y: auto;
+        }
+
+        #html-editor, #css-editor, #python-editor, #java-editor {
+            flex: 1;
+        }
+
+        #viewer {
+            flex: 1;
+            border: none;
+            background-color: #fff;
+        }
+
+        /* Scrollbars */
+        .editor::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .editor::-webkit-scrollbar-thumb {
+            background-color: #61dafb;
+            border-radius: 10px;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            .editor-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        🖥️ Multi-Language Code Editor
+    </header>
+
+    <!-- Tabs for switching between languages -->
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('html')">HTML</div>
+        <div class="tab" onclick="showTab('css')">CSS</div>
+        <div class="tab" onclick="showTab('python')">Python</div>
+        <div class="tab" onclick="showTab('java')">Java</div>
+    </div>
+
+    <div class="tab-content active" id="html">
+        <div class="editor-container">
+            <div id="html-editor" class="editor" contenteditable="true">
+                <!-- Initial HTML code -->
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Sample HTML</title>
+                </head>
+                <body>
+                    <h1>Hello World!</h1>
+                    <p>This is a live HTML editor.</p>
+                </body>
+                </html>
+            </div>
+            <iframe id="viewer"></iframe>
+        </div>
+    </div>
+
+    <div class="tab-content" id="css">
+        <div class="editor-container">
+            <div id="css-editor" class="editor" contenteditable="true">
+                /* CSS starts here */
+                body {
+                    background-color: #282c34;
+                    color: #61dafb;
+                    font-family: Arial, sans-serif;
+                }
+                h1 {
+                    font-size: 48px;
+                }
+            </div>
+            <iframe id="viewer-css"></iframe>
+        </div>
+    </div>
+
+    <div class="tab-content" id="python">
+        <div id="python-editor" class="editor" contenteditable="true">
+            # Python Code Editor
+            print("Hello, World!")
+        </div>
+    </div>
+
+    <div class="tab-content" id="java">
+        <div id="java-editor" class="editor" contenteditable="true">
+            // Java Code Editor
+            public class HelloWorld {
+                public static void main(String[] args) {
+                    System.out.println("Hello, World!");
+                }
+            }
+        </div>
+    </div>
+
+    <script>
+        // Function to update the live HTML viewer
+        function updateViewer() {
+            const htmlContent = document.getElementById('html-editor').innerText;
+            const cssContent = document.getElementById('css-editor').innerText;
+            const combinedContent = `<style>${cssContent}</style>` + htmlContent;
+            document.getElementById('viewer').srcdoc = combinedContent;
+        }
+
+        // Initial update on page load
+        updateViewer();
+
+        // Update viewer on HTML or CSS input
+        document.getElementById('html-editor').addEventListener('input', updateViewer);
+        document.getElementById('css-editor').addEventListener('input', updateViewer);
+
+        // Tab functionality to switch between languages
+        function showTab(tabId) {
+            // Hide all tab contents
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remove active class from all tabs
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(button => button.classList.remove('active'));
+
+            // Show the clicked tab
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+    </script>
+</body>
+</html>
